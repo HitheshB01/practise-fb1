@@ -4,8 +4,9 @@ import {
   addDoc,
   collection,
   deleteDoc,
-  getDocs,
-  doc,
+  getDocs,doc,
+  updateDoc
+  
 } from "firebase/firestore";
 import { useEffect } from "react";
 
@@ -33,7 +34,7 @@ const Details = () => {
     getlist();
   }, []);
 
-  const [userDtails, setUserDtails] = useState([]);
+//   const [userDtails, setUserDtails] = useState([]);
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -47,11 +48,22 @@ const Details = () => {
   };
 
   const deleteData = async (id) => {
-    const singleData = doc(db, "userDetails", id);
+    const singleData = doc(dataref, id);
     console.log(id);
     await deleteDoc(singleData);
-    getlist()
+    getlist() 
   };
+
+  const [updatedName,setUpdatedName]=useState('')
+
+  const updateDetails= async(id)=>{
+
+    const singleData = doc(dataref, id);
+    console.log(id)
+    await updateDoc(singleData,{name:updatedName})
+    getlist()
+
+  }
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-800">
       <div className="flex items-center justify-center min-h-screen bg-gray-800">
@@ -124,6 +136,8 @@ const Details = () => {
                 <>Message:</> {data.message}
               </p>
               <button onClick={() => deleteData(data.id)}>delete</button>
+              <input type="text" onChange={e=>setUpdatedName(e.target.value)} />
+              <button onClick={()=>updateDetails(data.id)}>update </button>
             </div>
           );
         })}
